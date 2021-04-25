@@ -68,7 +68,7 @@ class EM_DATA(torch.utils.data.Dataset):
                 mask = TF.hflip(mask)
         """
         if self._train and not self._validation:
-            if random.random() > 0.1:
+            if random.random() > 0.5:
                 # Choose random augmentation
                 func = np.random.choice([elastic, add_noise, shear, rotate, zoom])
                 image, mask = func(image, mask)
