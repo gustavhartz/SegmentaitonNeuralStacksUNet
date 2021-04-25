@@ -12,7 +12,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 from collections import OrderedDict
-from torch.nn import init
+from torch.nn import init, Sigmoid
 import numpy as np
 
 
@@ -184,7 +184,7 @@ class UNet(nn.Module):
         self.in_channels = in_channels
         self.start_filts = start_filts
         self.depth = depth
-
+        self.sigmoid = Sigmoid()
         self.down_convs = []
         self.up_convs = []
 
@@ -240,7 +240,8 @@ class UNet(nn.Module):
         # nn.CrossEntropyLoss is your training script,
         # as this module includes a softmax already.
         x = self.conv_final(x)
-        return x
+        # Squeeze image values between 0 and 1
+        return self.sigmoid(x)
 
 
 if __name__ == "__main__":
