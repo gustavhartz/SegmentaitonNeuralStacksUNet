@@ -1,6 +1,7 @@
 import random
 import numpy as np
 import cv2
+import math
 
 from skimage import filters, transform
 from scipy import ndimage
@@ -62,9 +63,11 @@ def zoom(img, label):
 
     img_zoom = ndimage.zoom(img, zoom_factor)
     label_zoom = ndimage.zoom(label, zoom_factor)
+    size_diff = img_zoom.shape[0] - img.shape[0]
 
-    cmin = int(img_zoom.shape[0] / 3)
-    cmax = 2 * int(img_zoom.shape[0] / 3)
+    center = int(img_zoom.shape[0]/2)
+    cmin = center - math.ceil(size_diff/2) + 1
+    cmax = center + math.floor(size_diff/2) - 1
     center_x = random.randint(cmin, cmax)
     center_y = random.randint(cmin, cmax)
 
@@ -74,8 +77,8 @@ def zoom(img, label):
     _img = img_zoom[starty:(starty + size[0]), startx:(startx + size[0])]
     _label = label_zoom[starty:(starty + size[0]), startx:(startx + size[0])]
     _label = fix_classes(_label)
-    return (_img, _label)
 
+    return (_img, _label)
 
 def elastic(img, label):
     alpha = random.uniform(100, 140)
